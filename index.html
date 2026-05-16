@@ -1,24 +1,1185 @@
-<!doctype html><html lang="en" class="no-touch" dir="ltr"><head><meta charset="utf-8"><meta http-equiv="x-dns-prefetch-control" content="on"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="renderer" content="webkit"><meta name="p:domain_verify" content="7bf84a03e56ed9dc22f6dec73156911d"/><link rel="dns-prefetch" href="//https://terastaticc.com"><link rel="preconnect" href="https://https://terastaticc.com" crossorigin><link rel="preload" fetchpriority="high" as="image" href="https://terastaticc.com/common-static/new_logo.webp" type="image/webp"><link rel="preload" fetchpriority="high" as="image" href="https://terastaticc.com/fe-static/fe-webv5-ai-index/assets/ai-info-smart-presentation.webp" type="image/webp"><script type="importmap">{
-            "imports": {
-                "vue": "https://terastaticc.com/npm-pkg/vue.3.5.13.runtime.esm-browser.prod.min.js",
-                "vue-router": "https://terastaticc.com/npm-pkg/vue-router.4.4.5.esm-browser.min.js"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftRoaster - Employee Schedule Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --surface: rgba(30, 41, 59, 0.6);
+            --surface-hover: rgba(51, 65, 85, 0.6);
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: rgba(148, 163, 184, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Header */
+        .app-header {
+            padding: 40px 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 120%;
+            height: 200%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05));
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .app-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .app-header p {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px 60px;
+        }
+
+        /* Glass Cards */
+        .panel {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.2),
+                0 10px 10px -5px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-title .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--surface-hover);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(51, 65, 85, 0.8);
+            border-color: rgba(148, 163, 184, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Inputs */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        /* Shift Form */
+        .shift-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+            gap: 16px;
+            align-items: end;
+        }
+
+        /* Employee List */
+        .employee-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .employee-item:hover {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateX(4px);
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .employee-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .employee-details h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .employee-details span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Roster Grid */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: 220px repeat(7, 1fr);
+            gap: 2px;
+            background: rgba(148, 163, 184, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .grid-header {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 18px 10px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .grid-header.day-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.1));
+            color: var(--text);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .employee-cell {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 20px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .shift-cell {
+            background: rgba(15, 23, 42, 0.3);
+            padding: 12px;
+            min-height: 90px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .shift-cell:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .shift-cell.drag-over {
+            background: rgba(99, 102, 241, 0.15);
+            border: 2px dashed var(--primary-light);
+            box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Shift Blocks */
+        .shift-block {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            user-select: none;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .shift-block:active {
+            cursor: grabbing;
+        }
+
+        .shift-block.dragging {
+            opacity: 0.6;
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .shift-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        .shift-block.morning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .shift-block.morning:hover {
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+        }
+
+        .shift-block.afternoon {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .shift-block.afternoon:hover {
+            box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
+        }
+
+        .shift-block.night {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .shift-block.night:hover {
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        .shift-time {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .shift-delete {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .shift-delete:hover {
+            background: var(--danger);
+            transform: scale(1.1);
+        }
+
+        .shift-block:hover .shift-delete {
+            display: flex;
+        }
+
+        .empty-cell {
+            color: rgba(148, 163, 184, 0.3);
+            font-size: 0.9rem;
+            text-align: center;
+            padding-top: 24px;
+            font-weight: 500;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+            border-radius: 24px;
+            padding: 36px;
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid var(--border);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
             }
-        }</script><link rel="modulepreload" href="https://terastaticc.com/npm-pkg/vue.3.5.13.runtime.esm-browser.prod.min.js"><link rel="modulepreload" href="https://terastaticc.com/npm-pkg/vue-router.4.4.5.esm-browser.min.js"><title>TeraBox - Free Cloud Storage Up To 1 TB, Send Large Files Online</title><meta content="all" name="robots"><meta name="description" content="TeraBox offers 1 tb free cloud storage & online file transfer. Login or Download TeraBox app to get 1 tb storage and use it on your PC, Mac, iPhone & Android."><meta property="og:title" content="TeraBox - Free Cloud Storage Up To 1 TB, Send Large Files Online"><meta property="og:type" content="site"><meta property="og:url" content="https://dm.1024terabox.com/ai/index"><meta property="og:image" content="https://s2.teraboxcdn.com/fe-opera-static/node-static-v4/fe-webv4-wap/assets/img/og-default.png"><meta property="og:site_name" content="1024terabox.com"><meta property="og:description" content="TeraBox offers 1 tb free cloud storage & online file transfer. Login or Download TeraBox app to get 1 tb storage and use it on your PC, Mac, iPhone & Android."><link rel="dns-prefetch" href="//data.1024terabox.com"/><link rel="dns-prefetch" href="//blog.terabox.com"/><link rel="shortcut icon" href="https://terastaticc.com/common-static/favicon.ico"><link href="https://dm.1024terabox.com/ai/index" hreflang="x-default" rel="alternate"/><link rel="canonical" href="https://dm.1024terabox.com/ai/index"> <link href="https://dm.1024terabox.com/ai/index" hreflang="en" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/indonesian" hreflang="id" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/japanese" hreflang="ja" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/thai" hreflang="th" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/korean" hreflang="ko" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/hindi" hreflang="hi" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/russian" hreflang="ru" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/spanish" hreflang="es" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/portuguese" hreflang="pt" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/vietnamese" hreflang="vi" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/arabic" hreflang="ar" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/turkish" hreflang="tr" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/chinese" hreflang="zh-CN" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/hongkong" hreflang="zh-HK" rel="alternate"/><link href="https://dm.1024terabox.com/ai/index/taiwan" hreflang="zh-TW" rel="alternate"/><link rel="manifest" href="https://terastaticc.com/fe-static/fe-webv5-ai-index/manifest.1769414751762.teraaisw.json"><script>performance && (window.FP_FIRST = performance.now());</script><script type="module" crossorigin src="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/index.cf2a8a92.js"></script><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/vue-family.0baa0fb6.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/axios.99e1599a.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/terabox-alipay.ce0fad35.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/lodash-es.b28cb7ba.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/terabox-view.f11bf7ae.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/terabox-helper.085120e5.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/element-plus.4d416645.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/terabox-login.0a15072b.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/terabox-membership.50cf8cfb.js"><link rel="modulepreload" crossorigin href="https://terastaticc.com/fe-static/fe-webv5-ai-index/js/terabox-wap-membership.4412bf89.js"><link rel="stylesheet" href="https://terastaticc.com/fe-static/fe-webv5-ai-index/assets/index.f9dadcd7.css"></head><body><div id="app"></div></body><noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1024536819665113&ev=PageView&noscript=1"/></noscript><noscript><img height="1" width="1" style="display:none" alt="" src="https://px.ads.linkedin.com/collect/?pid=7728420&fmt=gif"/></noscript><script>var templateData = {"bdstoken":"9cdf13ae9b79be7ed0b9bb1a05ea9cc7","pcftoken":"6c5841e6df209c97eb7d1026e5814fbb","newDomain":{"origin":"https://dm.1024terabox.com","host":"dm.1024terabox.com","domain":"1024terabox.com","cdn":"https://terastaticc.com","isGCP":false,"originalPrefix":"dm","regionDomainPrefix":"dm","urlDomainPrefix":"dm"},"internal":false,"country":"","enablePreRequest":false,"userVipIdentity":0,"uk":"4401983465105"};</script><script>try { eval(decodeURIComponent(`function%20fn%28a%29%7Bwindow.jsToken%20%3D%20a%7D%3Bfn%28%22C25BE2650677EEA989A882B8C7B2044345D5F4098EF8F7BA2C07B77DE282FD13CB7F8243D572B0352ABB99959770D695CEFB1CBB66A038C1C29FB808AA82AC69%22%29`)) } catch (ex) { console.log(ex); }</script><script>(function(_0x41a236,_0x4b554c){const _0x1d70a4=_0xc13c,_0x5939b9=_0x41a236();while(!![]){try{const _0x4a4768=parseInt(_0x1d70a4(0x93))/0x1*(-parseInt(_0x1d70a4(0x8d))/0x2)+parseInt(_0x1d70a4(0x7d))/0x3+-parseInt(_0x1d70a4(0x86))/0x4+parseInt(_0x1d70a4(0x85))/0x5+-parseInt(_0x1d70a4(0x96))/0x6+parseInt(_0x1d70a4(0x88))/0x7*(parseInt(_0x1d70a4(0x7b))/0x8)+parseInt(_0x1d70a4(0x80))/0x9;if(_0x4a4768===_0x4b554c)break;else _0x5939b9['push'](_0x5939b9['shift']());}catch(_0x41cbda){_0x5939b9['push'](_0x5939b9['shift']());}}}(_0x1117,0x6ddd1),(function(){const _0x4f5bf5=_0xc13c;if(typeof window===_0x4f5bf5(0x8c)||!window?.[_0x4f5bf5(0x8a)]?.[_0x4f5bf5(0x90)])return;const _0x187fc8=new URL('/nodeapi/getCommonApiData',window[_0x4f5bf5(0x87)][_0x4f5bf5(0x7e)]);_0x187fc8['search']=new URLSearchParams({'jsToken':window?.[_0x4f5bf5(0x97)]||'','bdstoken':window?.['templateData']?.[_0x4f5bf5(0x92)]||'','pcftoken':window?.[_0x4f5bf5(0x8a)]?.[_0x4f5bf5(0x82)]||''})[_0x4f5bf5(0x91)](),fetch(_0x187fc8)[_0x4f5bf5(0x84)](_0x5dcbdb=>_0x5dcbdb[_0x4f5bf5(0x7f)]())['then'](_0x2738ab=>{const _0x7fb188=_0x4f5bf5,_0x5966d4=new WeakMap(),_0x24b584=new TypeError(_0x7fb188(0x95)),_0x53bac8=(_0x4e69a0,_0x3a72d4)=>{const _0xefc18e=_0x7fb188;if(_0x5966d4['has'](_0x4e69a0))return _0x5966d4[_0xefc18e(0x7c)](_0x4e69a0);const _0x5182d0=new Proxy(_0x4e69a0,{'get'(_0x19761f,_0x405168,_0x5f3df9){const _0x311445=_0xefc18e;if(Date[_0x311445(0x81)]()>_0x3a72d4)return undefined;const _0x15df30=Reflect[_0x311445(0x7c)](_0x19761f,_0x405168,_0x5f3df9);if(_0x15df30&&typeof _0x15df30===_0x311445(0x89))return _0x53bac8(_0x15df30,_0x3a72d4);return _0x15df30;},'set'(){throw _0x24b584;},'deleteProperty'(){throw _0x24b584;},'defineProperty'(){throw _0x24b584;}});return _0x5966d4['set'](_0x4e69a0,_0x5182d0),_0x5182d0;},{api_data:api_data={},valid_time:valid_time=0x0}=_0x2738ab?.[_0x7fb188(0x94)]||{},_0x4a3d8e=Date['now']()+valid_time;Object[_0x7fb188(0x8b)](window,_0x7fb188(0x8e),{'configurable':![],'writable':![],'enumerable':![],'value':_0x53bac8({'data':api_data,'expires':_0x4a3d8e},_0x4a3d8e)});})[_0x4f5bf5(0x83)](_0x4dd525=>{const _0x5950a3=_0x4f5bf5;window[_0x5950a3(0x8e)]=undefined,console[_0x5950a3(0x8f)]('getCommonApiData\x20error',_0x4dd525);});}()));function _0xc13c(_0xa2bc04,_0x180b47){_0xa2bc04=_0xa2bc04-0x7b;const _0x111758=_0x1117();let _0xc13c61=_0x111758[_0xa2bc04];return _0xc13c61;}function _0x1117(){const _0x3c8ef4=['64IZXWhs','get','1579668yBVens','origin','json','4863321eyILYn','now','pcftoken','catch','then','2281775IMwUVz','76012HICFLn','location','63658HHhrIY','object','templateData','defineProperty','undefined','1516aaLZbp','__PRE_REQ_API_DATA__','error','enablePreRequest','toString','bdstoken','477tKOJTy','data','This\x20data\x20is\x20readonly.','4592772Oduqvq','jsToken'];_0x1117=function(){return _0x3c8ef4;};return _0x1117();}</script><script defer="defer">var BadJs=(()=>{function t(t,e){return t(e={exports:{}},e.exports),e.exports}function f(t){return"function"==typeof t}function h(t){return void 0===t}function r(t,e,r){window.addEventListener?t.addEventListener(e,r,!0):window.attachEvent&&t.attachEvent("on"+e,r)}Array.prototype.includes||(Array.prototype.includes=function(t,e){if(null==this)throw new TypeError('"this" is null or not defined');var r=Object(this),n=r.length>>>0;if(0!=n)for(var o,i,e=0|e,a=Math.max(0<=e?e:n-Math.abs(e),0);a<n;){if((o=r[a])===(i=t)||"number"==typeof o&&"number"==typeof i&&isNaN(o)&&isNaN(i))return!0;a++}return!1}),Object.defineProperty||(Object.defineProperty=function(t,e,r){t[e]=r.value}),"function"!=typeof Object.assign&&(Object.assign=function(t,e){var r=arguments;if(null==t)throw new TypeError("Cannot convert undefined or null to object");for(var n=Object(t),o=1;o<arguments.length;o++){var i=r[o];if(null!=i)for(var a in i)Object.prototype.hasOwnProperty.call(i,a)&&(n[a]=i[a])}return n});var n=t(function(t,e){var r;r=function(){function r(t){return t.charAt(0).toUpperCase()+t.substring(1)}function t(t){return function(){return this[t]}}var e=["isConstructor","isEval","isNative","isToplevel"],n=["columnNumber","lineNumber"],o=["fileName","functionName","source"],i=e.concat(n,o,["args"],["evalOrigin"]);function s(t){if(t)for(var e=0;e<i.length;e++)void 0!==t[i[e]]&&this["set"+r(i[e])](t[i[e]])}s.prototype={getArgs:function(){return this.args},setArgs:function(t){if("[object Array]"!==Object.prototype.toString.call(t))throw new TypeError("Args must be an Array");this.args=t},getEvalOrigin:function(){return this.evalOrigin},setEvalOrigin:function(t){if(t instanceof s)this.evalOrigin=t;else{if(!(t instanceof Object))throw new TypeError("Eval Origin must be an Object or StackFrame");this.evalOrigin=new s(t)}},toString:function(){var t=this.getFileName()||"",e=this.getLineNumber()||"",r=this.getColumnNumber()||"",n=this.getFunctionName()||"";return this.getIsEval()?t?"[eval] ("+t+":"+e+":"+r+")":"[eval]:"+e+":"+r:n?n+" ("+t+":"+e+":"+r+")":t+":"+e+":"+r}},s.fromString=function(t){var e,r,n,o=t.indexOf("("),i=t.lastIndexOf(")"),a=t.substring(0,o),o=t.substring(o+1,i).split(","),t=t.substring(i+1);return 0===t.indexOf("@")&&(e=(i=/@(.+?)(?::(\d+))?(?::(\d+))?$/.exec(t,""))[1],r=i[2],n=i[3]),new s({functionName:a,args:o||void 0,fileName:e,lineNumber:r||void 0,columnNumber:n||void 0})};for(var a=0;a<e.length;a++)s.prototype["get"+r(e[a])]=t(e[a]),s.prototype["set"+r(e[a])]=(e=>function(t){this[e]=Boolean(t)})(e[a]);for(var c=0;c<n.length;c++)s.prototype["get"+r(n[c])]=t(n[c]),s.prototype["set"+r(n[c])]=(r=>function(t){if(e=t,isNaN(parseFloat(e))||!isFinite(e))throw new TypeError(r+" must be a Number");var e;this[r]=Number(t)})(n[c]);for(var f=0;f<o.length;f++)s.prototype["get"+r(o[f])]=t(o[f]),s.prototype["set"+r(o[f])]=(e=>function(t){this[e]=String(t)})(o[f]);return s},t.exports=r()}),o=t(function(t,e){var r;r=function(s){var e=/(^|@)\S+:\d+/,r=/^\s*at .*(\S+:\d+|\(native\))/m,n=/^(eval@)?(\[native code])?$/;return{parse:function(t){if(void 0!==t.stacktrace||void 0!==t["opera#sourceloc"])return this.parseOpera(t);if(t.stack&&t.stack.match(r))return this.parseV8OrIE(t);if(t.stack)return this.parseFFOrSafari(t);throw new Error("Cannot parse given Error object")},extractLocation:function(t){return-1===t.indexOf(":")?[t]:[(t=/(.+?)(?::(\d+))?(?::(\d+))?$/.exec(t.replace(/[()]/g,"")))[1],t[2]||void 0,t[3]||void 0]},parseV8OrIE:function(t){return t.stack.split("\n").filter(function(t){return!!t.match(r)},this).map(function(t){var e=(r=(t=-1<t.indexOf("(eval ")?t.replace(/eval code/g,"eval").replace(/(\(eval at [^()]*)|(,.*$)/g,""):t).replace(/^\s+/,"").replace(/\(eval code/g,"(").replace(/^.*?\s+/,"")).match(/ (\(.+\)$)/),r=e?r.replace(e[0],""):r,n=this.extractLocation(e?e[1]:r),e=e&&r||void 0,r=-1<["eval","<anonymous>"].indexOf(n[0])?void 0:n[0];return new s({functionName:e,fileName:r,lineNumber:n[1],columnNumber:n[2],source:t})},this)},parseFFOrSafari:function(t){return t.stack.split("\n").filter(function(t){return!t.match(n)},this).map(function(t){var e,r;return-1===(t=-1<t.indexOf(" > eval")?t.replace(/ line (\d+)(?: > eval line \d+)* > eval:\d+:\d+/g,":$1"):t).indexOf("@")&&-1===t.indexOf(":")?new s({functionName:t}):(e=(e=t.match(r=/((.*".+"[^@]*)?[^@]*)(?:@)/))&&e[1]?e[1]:void 0,r=this.extractLocation(t.replace(r,"")),new s({functionName:e,fileName:r[0],lineNumber:r[1],columnNumber:r[2],source:t}))},this)},parseOpera:function(t){return!t.stacktrace||-1<t.message.indexOf("\n")&&t.message.split("\n").length>t.stacktrace.split("\n").length?this.parseOpera9(t):t.stack?this.parseOpera11(t):this.parseOpera10(t)},parseOpera9:function(t){for(var e=/Line (\d+).*script (?:in )?(\S+)/i,r=t.message.split("\n"),n=[],o=2,i=r.length;o<i;o+=2){var a=e.exec(r[o]);a&&n.push(new s({fileName:a[2],lineNumber:a[1],source:r[o]}))}return n},parseOpera10:function(t){for(var e=/Line (\d+).*script (?:in )?(\S+)(?:: In function (\S+))?$/i,r=t.stacktrace.split("\n"),n=[],o=0,i=r.length;o<i;o+=2){var a=e.exec(r[o]);a&&n.push(new s({functionName:a[3]||void 0,fileName:a[2],lineNumber:a[1],source:r[o]}))}return n},parseOpera11:function(t){return t.stack.split("\n").filter(function(t){return!!t.match(e)&&!t.match(/^Error created at/)},this).map(function(t){var e,r=t.split("@"),n=this.extractLocation(r.pop()),r=r.shift()||"",o=r.replace(/<anonymous function(: (\w+))?>/,"$2").replace(/\([^)]*\)/g,"")||void 0,r=void 0===(e=r.match(/\(([^)]*)\)/)?r.replace(/^[^(]+\(([^)]*)\)$/,"$1"):e)||"[arguments not available]"===e?void 0:e.split(",");return new s({functionName:o,args:r,fileName:n[0],lineNumber:n[1],columnNumber:n[2],source:t})},this)}}},t.exports=r(n)});function i(t){var o;return"string"==typeof t?t:(o=[],function t(e){for(var r in e)if(e.hasOwnProperty(r)){var n=e[r];if("function"==typeof n||void 0===n)return;"[object Object]"===Object.prototype.toString.call(n)?t(n):o.push(encodeURIComponent(r)+"="+encodeURIComponent(n))}}(t),o.join("&"))}function p(t){if(t)try{var e=o.parse(t),r=e&&e.splice(0,3)||[];return JSON.stringify(r)}catch(t){}}function a(t,e){this.reportInstance=e,this.errorArr=[],this.error(t)}function s(t,e){this.reject(t,e)}function c(t,e,r){this.report=e,this.globalVariable=t,this.error(r)}function u(t){this.conf=t||{}}function e(t){this.config=this.mergeConf(t),this.report=this.report(this.config),this.jsError(),this.promiseError()}return a.getIntance=function(t,e){return a.instance=a.instance?a.instance:new a(t,e)},a.prototype.error=function(s){var c=this;r(s,"error",function(t){if(t=t||window.event){var e=t.target||t.srcElement,r=!1;if(6!==a()&&7!==a()&&(r=e instanceof HTMLScriptElement||e instanceof HTMLLinkElement,e instanceof HTMLImageElement||e instanceof HTMLVideoElement||e instanceof HTMLAudioElement))return!1;var n,o={},i=c.reportInstance;r?(n=e.src||e.href,o.title="resource"+e,o.msg=n,o.from=location.href):(o.title=t.message,o.msg=t.error&&t.error.stack||t.source+":"+t.message,o.from=location.href,o.lineno=t.lineno,o.colno=t.colno),o.stack=p(t.error),s.ERROE_POLL.includes(o.title)||(s.ERROE_POLL.push(o.title),i.report&&f(i.report)&&(r?i.reportResource(o):i.report(o)))}function a(){var t=navigator.userAgent,e=-1<t.indexOf("compatible")&&-1<t.indexOf("MSIE"),r=-1<t.indexOf("Edge")&&!e,n=-1<t.indexOf("Trident")&&-1<t.indexOf("rv:11.0");return e?(new RegExp("MSIE (\\d+\\.\\d+);").test(t),7==+(e=parseFloat(RegExp.$1))?7:8==+e?8:9==+e?9:10==+e?10:6):r?"edge":n?11:-1}})},s.getIntance=function(t,e){return s.instance=s.instance?s.instance:new s(t,e)},s.prototype.reject=function(n,t){var o=t;r(n,"unhandledrejection",function(t){var e,r={};t&&(e="object"==typeof t.reason?JSON.stringify(t.reason):t.reason,r.title="unhandledrejection:"+e,r.from=location.href,r.msg=e,r.stack=p(t.reason),n.ERROE_POLL.includes(r.title)||(n.ERROE_POLL.push(r.title),o.report&&f(o.report)&&o.report(r)))})},c.getIntance=function(t,e,r){return c.instance=c.instance?c.instance:new c(t,e,r)},c.prototype.error=function(t){var e=this;t?this.errorHandler(t):r(this.globalVariable,"load",function(){var t=e.globalVariable.Vue;t&&t.config&&e.errorHandler(t)})},c.prototype.errorHandler=function(t){var o=this;t.config.errorHandler=function(t,e,r){var n;o.globalVariable.ERROE_POLL.includes(t)||(o.globalVariable.ERROE_POLL.push(t),(n={}).title=t,n.msg=r,n.from=location.href,n.stack=p(t),(r=o.report).report&&f(r.report)&&r.report(n))}},u.getIntance=function(t){return u.instance=u.instance?u.instance:new u(t)},u.prototype.report=function(e){void 0===e&&(e={});var r="";if(this.conf&&this.conf.downgrade&&this.conf.downgrade.error){var n,t=this.conf.downgrade.error;for(n in t)t[n].forEach(function(t){e.msg.match(t)&&(r="_"+n)})}var o=this.mergeCommonConf("_js_error"+r),o=i(Object.assign(o,e)),o=""+this.conf.host+this.conf.path+"?"+o;this.commonReport(o)},u.prototype.reportResource=function(e){var r="";if(this.conf&&this.conf.downgrade&&this.conf.downgrade.resource){var n,t=this.conf.downgrade.resource;for(n in t)t[n].forEach(function(t){e.msg.match(t)&&(r="_"+n)})}var o=this.mergeCommonConf("_js_error_resource"+r),o=i(Object.assign(o,e)),o=""+this.conf.host+this.conf.path+"?"+o;this.commonReport(o)},u.prototype.reportCustom=function(t,e){if(!t)throw new Error("[reportCustom] need a name as the first parameter.");var r=this.mergeCommonConf("_custom_report_"+t),r=i(Object.assign(r,{title:t+":自定义上报\b.",msg:t,from:location.href},e)),t=""+this.conf.host+this.conf.path+"?"+r;this.commonReport(t)},u.prototype.mergeCommonConf=function(t){void 0===t&&(t="");var e,r,n,o,i=this.conf,a=i.namespace,s=i.type,c=i.clienttype,f=i.productId,p=i.rules,u=i.sessionId,i=i.uk,l={};return s?l.type=s+t:(s="",o=p.path,e=p.hash,n=window.location.pathname,"boolean"==typeof o?((r=n.split("/")).shift(),s=r.join("_")):"object"==typeof o&&o&&((r=n.match(o)[0].split("/")).shift(),s+=r.join("_")),e&&0<location.hash.length?"boolean"==typeof e?(o=((n=window.location.hash)?n.substring(1).split("/"):[]).join("_"),l.type=s+o+t):"object"==typeof e&&(n=(r=window.location.hash.match(e))&&0<r.length?r[0].split("/"):[],l.type=s+n.join("_")+t):l.type=s+t),a&&(o=p.ctx?a+"_"+this.getExecContext()+"_"+l.type:a+"_"+l.type,l.type=o),u&&(l.sessionId=u),i&&(l.uk=i),l.productId=f,l.clienttype=c,l.navigator=h(navigator)?null:navigator.userAgent,l},u.prototype.getExecContext=function(){var t,e="browser",r=window.navigator.userAgent.toLowerCase(),n={native_ios:~r.indexOf("dubox")&&~r.indexOf("ios"),native_android:~r.indexOf("dubox")&&~r.indexOf("android"),pc_windows:~r.indexOf("WindowsTeraBox")&&~r.indexOf("pc-window")};for(t in n)if(Object.hasOwnProperty.call(n,t)&&n[t]){e=t;break}return e},u.prototype.commonReport=function(t){var e,r;t.length<=2e3?((e=new Image).onload=e.onerror=function(){e=null},e.src=t):(r=(t=t.split("?"))[0],t=new URLSearchParams(t[1]),fetch(r,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:t}).catch(function(){}))},window.ERROE_POLL=[],e.getIntance=function(){return e.instance=e.instance?e.instance:new e({})},e.prototype.updateConfig=function(t){this.config=Object.assign(this.config,t),this.report.conf=Object.assign(this.report.conf,t)},e.prototype.mergeConf=function(t){t=h(t)?{}:t;var e={host:"//www.terabox.com",path:"/api/analytics",namespace:"",productId:"",type:"",uk:"",sessionId:"",rules:{path:!0,hash:!0},clienttype:0,vueError:!0,jsError:!0,promiseError:!0,env:window,report:u.getIntance};if(!t.report||f(t.report))return Object.assign(e,t);console.error("report must is function")},e.prototype.jsError=function(){this.config.jsError&&a.getIntance(this.config.env,this.report)},e.prototype.promiseError=function(){this.config.promiseError&&s.getIntance(this.config.env,this.report)},e.prototype.vueError=function(){this.config.vueError&&c.getIntance(this.config.env,this.report)},e.prototype.vueErrorHandler=function(t){this.config.vueError&&c.getIntance(this.config.env,this.report,t)},e.prototype.report=function(t){return this.config.report(t)},e.prototype.reportCustom=function(t,e){this.config.report().reportCustom(t,e)},e})();</script><script>var hmrTranslationSwitch = 'on';
-    var hmrCDNOrigin = 'https://terastaticc.com';
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
-    
-    var __syncScriptErrLogs = [];
-    function __onScriptLoadError(srcElement, appName, lang, moduleName, langVersion, localVersion) {
-        __syncScriptErrLogs.push({
-            cdnLink: srcElement && srcElement.src,
-            appName,
-            lang,
-            moduleName,
-            langVersion,
-            localVersion
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .modal-close {
+            background: rgba(148, 163, 184, 0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 28px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Templates */
+        .template-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .template-item {
+            padding: 20px 24px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-item:hover {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateX(6px);
+        }
+
+        .template-name {
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .template-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+
+        /* Print */
+        .print-only { display: none; }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block; }
+            body { background: white; color: #000; }
+            .panel { background: white; border: 1px solid #ddd; box-shadow: none; }
+            .roster-grid { border: 1px solid #ddd; }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .roster-grid { grid-template-columns: 160px repeat(7, 1fr); }
+            .shift-form { grid-template-columns: 1fr; }
+            .container { padding: 20px; }
+            .app-header { padding: 30px 20px 15px; }
+        }
+
+        @media (max-width: 600px) {
+            .roster-grid {
+                display: flex;
+                flex-direction: column;
+            }
+            .grid-header, .employee-cell { display: none; }
+            .shift-cell {
+                border-bottom: 1px solid var(--border);
+                min-height: auto;
+            }
+            .shift-cell::before {
+                content: attr(data-day);
+                font-weight: 700;
+                color: var(--primary-light);
+                display: block;
+                margin-bottom: 10px;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <h1>📅 ShiftRoaster</h1>
+            <p>Create and manage employee shift schedules with ease</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Employees -->
+        <div class="panel no-print">
+            <div class="panel-title">
+                <div class="icon">👥</div>
+                Employees
+                <button class="btn btn-primary" onclick="openModal('employeeModal')" style="margin-left: auto; font-size: 0.85rem; padding: 10px 20px;">
+                    + Add Employee
+                </button>
+            </div>
+            <div id="employeeList" class="employee-list">
+                <p style="color: var(--text-muted); text-align: center; padding: 30px;">No employees added yet. Add your first employee to get started.</p>
+            </div>
+        </div>
+
+        <!-- Assign Shift -->
+        <div class="panel no-print">
+            <div class="panel-title">
+                <div class="icon">⏰</div>
+                Assign Shift
+            </div>
+            <form id="shiftForm" onsubmit="return addShift(event)">
+                <div class="shift-form">
+                    <div class="form-group">
+                        <label>Employee</label>
+                        <select id="shiftEmployee" required>
+                            <option value="">Select employee...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select id="shiftDay" required>
+                            <option value="0">Monday</option>
+                            <option value="1">Tuesday</option>
+                            <option value="2">Wednesday</option>
+                            <option value="3">Thursday</option>
+                            <option value="4">Friday</option>
+                            <option value="5">Saturday</option>
+                            <option value="6">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start</label>
+                        <input type="time" id="shiftStart" required value="09:00">
+                    </div>
+                    <div class="form-group">
+                        <label>End</label>
+                        <input type="time" id="shiftEnd" required value="17:00">
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="shiftType">
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="night">Night</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Assign</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Templates -->
+        <div class="panel no-print">
+            <div class="panel-title" style="justify-content: space-between;">
+                <span><div class="icon" style="display: inline-flex; margin-right: 12px;">📋</div>Weekly Templates</span>
+                <button class="btn btn-secondary" onclick="openModal('templateModal')" style="font-size: 0.85rem; padding: 10px 20px;">
+                    Save as Template
+                </button>
+            </div>
+            <div id="templateList" class="template-list">
+                <p style="color: var(--text-muted); text-align: center; padding: 20px;">No templates saved yet.</p>
+            </div>
+        </div>
+
+        <!-- Roster Grid -->
+        <div class="panel">
+            <div class="panel-title" style="justify-content: space-between;">
+                <span><div class="icon" style="display: inline-flex; margin-right: 12px;">📊</div>Weekly Roster <small style="font-weight: 400; color: var(--text-muted); margin-left: 8px;">— drag shifts to move</small></span>
+                <div class="no-print">
+                    <button class="btn btn-secondary" onclick="clearAllShifts()">Clear</button>
+                    <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                    <button class="btn btn-primary" onclick="exportData()">📥 Export</button>
+                </div>
+            </div>
+            <div class="roster-grid" id="rosterGrid"></div>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal-overlay" id="employeeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Employee</h3>
+                <button class="modal-close" onclick="closeModal('employeeModal')">×</button>
+            </div>
+            <form onsubmit="return addEmployee(event)">
+                <div class="form-grid">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Full Name *</label>
+                        <input type="text" id="empName" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <input type="text" id="empRole" placeholder="Cashier, Manager...">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="empPhone" placeholder="+1 234 567 890">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Email</label>
+                        <input type="email" id="empEmail" placeholder="john@company.com">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('employeeModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Template Modal -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Save as Template</h3>
+                <button class="modal-close" onclick="closeModal('templateModal')">×</button>
+            </div>
+            <form onsubmit="return saveTemplate(event)">
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label>Template Name</label>
+                    <input type="text" id="templateName" required placeholder="e.g., Standard Week">
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('templateModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Template</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let employees = JSON.parse(localStorage.getItem('sr_employees')) || [];
+        let shifts = JSON.parse(localStorage.getItem('sr_shifts')) || [];
+        let templates = JSON.parse(localStorage.getItem('sr_templates')) || [];
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        let draggedShift = null;
+
+        document.addEventListener('DOMContentLoaded', () => renderAll());
+
+        function saveData() {
+            localStorage.setItem('sr_employees', JSON.stringify(employees));
+            localStorage.setItem('sr_shifts', JSON.stringify(shifts));
+            localStorage.setItem('sr_templates', JSON.stringify(templates));
+        }
+
+        function renderAll() {
+            renderEmployeeList();
+            renderEmployeeSelect();
+            renderRosterGrid();
+            renderTemplates();
+        }
+
+        function showToast(message, isError) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function addEmployee(e) {
+            e.preventDefault();
+            const employee = {
+                id: Date.now(),
+                name: document.getElementById('empName').value,
+                role: document.getElementById('empRole').value || '',
+                phone: document.getElementById('empPhone').value || '',
+                email: document.getElementById('empEmail').value || ''
+            };
+            
+            employees.push(employee);
+            saveData();
+            renderAll();
+            closeModal('employeeModal');
+            e.target.reset();
+            showToast('Employee added!');
+            return false;
+        }
+
+        function removeEmployee(id) {
+            if (confirm('Remove this employee and all their shifts?')) {
+                employees = employees.filter(e => e.id !== id);
+                shifts = shifts.filter(s => s.employeeId !== id);
+                saveData();
+                renderAll();
+                showToast('Employee removed');
+            }
+        }
+
+        function renderEmployeeList() {
+            const container = document.getElementById('employeeList');
+            if (employees.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 30px;">No employees added yet. Add your first employee to get started.</p>';
+                return;
+            }
+            
+            container.innerHTML = employees.map(emp => {
+                const initials = emp.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                const details = [emp.role, emp.phone, emp.email].filter(Boolean).join(' • ');
+                return `
+                    <div class="employee-item">
+                        <div class="employee-info">
+                            <div class="employee-avatar">${initials}</div>
+                            <div class="employee-details">
+                                <h4>${emp.name}</h4>
+                                <span>${details || 'No additional info'}</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 8px 16px; font-size: 0.8rem;" onclick="removeEmployee(${emp.id})">Remove</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderEmployeeSelect() {
+            const select = document.getElementById('shiftEmployee');
+            select.innerHTML = '<option value="">Select employee...</option>' + 
+                employees.map(e => <option value="${e.id}">${e.name}${e.role ? ' (' + e.role + ')' : ''}</option>).join('');
+        }
+
+        function addShift(e) {
+            e.preventDefault();
+            const employeeId = parseInt(document.getElementById('shiftEmployee').value);
+            const day = parseInt(document.getElementById('shiftDay').value);
+            const start = document.getElementById('shiftStart').value;
+            const end = document.getElementById('shiftEnd').value;
+            const type = document.getElementById('shiftType').value;
+
+            if (!employeeId) {
+                showToast('Please select an employee', true);
+                return false;
+            }
+
+            const hasConflict = shifts.some(s => 
+                s.employeeId === employeeId && 
+                s.day === day && 
+                ((start >= s.start && start < s.end) || (end > s.start && end <= s.end) || (start <= s.start && end >= s.end))
+            );
+
+            if (hasConflict) {
+                showToast('Time conflict with existing shift!', true);
+                return false;
+            }
+
+            shifts.push({
+                id: Date.now(),
+                employeeId,
+                day,
+                start,
+                end,
+                type
+            });
+
+            saveData();
+            renderAll();
+            showToast('Shift assigned!');
+            return false;
+        }
+
+        function removeShift(id) {
+            shifts = shifts.filter(s => s.id !== id);
+            saveData();
+            renderAll();
+            showToast('Shift removed');
+        }
+
+        function calculateHours(start, end) {
+            const [sh, sm] = start.split(':').map(Number);
+            const [eh, em] = end.split(':').map(Number);
+            let hours = (eh * 60 + em - sh * 60 - sm) / 60;
+            if (hours < 0) hours += 24;
+            return hours;
+        }
+
+        // Drag and Drop
+        function handleDragStart(e, shiftId) {
+            draggedShift = shifts.find(s => s.id === shiftId);
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', shiftId);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedShift = null;
+            document.querySelectorAll('.shift-cell').forEach(cell => cell.classList.remove('drag-over'));
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const cell = e.target.closest('.shift-cell');
+            if (cell) cell.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            const cell = e.target.closest('.shift-cell');
+            if (cell) cell.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const cell = e.target.closest('.shift-cell');
+            if (cell && draggedShift) {
+                cell.classList.remove('drag-over');
+                const newDay = parseInt(cell.dataset.day);
+                const newEmployeeId = parseInt(cell.dataset.employee);
+
+                if (isNaN(newDay) || isNaN(newEmployeeId)) return;
+
+                const hasConflict = shifts.some(s => 
+                    s.id !== draggedShift.id &&
+                    s.employeeId === newEmployeeId && 
+                    s.day === newDay && 
+                    ((draggedShift.start >= s.start && draggedShift.start < s.end) || 
+                     (draggedShift.end > s.start && draggedShift.end <= s.end))
+                );
+
+                if (hasConflict) {
+                    showToast('Cannot move: time conflict!', true);
+                    return;
+                }
+
+                draggedShift.day = newDay;
+                draggedShift.employeeId = newEmployeeId;
+                saveData();
+                renderAll();
+                showToast('Shift moved!');
+            }
+        }
+
+        function renderRosterGrid() {
+            const grid = document.getElementById('rosterGrid');
+            
+            let html = '<div class="grid-header">Employee</div>';
+            days.forEach(day => {
+                html += <div class="grid-header day-header">${day.substring(0, 3)}</div>;
+            });
+
+            if (employees.length === 0) {
+                html += <div class="employee-cell" style="grid-column: 1 / -1; justify-content: center; color: var(--text-muted); padding: 40px;">No employees added</div>;
+            } else {
+                employees.forEach(emp => {
+                    const initials = emp.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                    html += `
+                        <div class="employee-cell">
+                            <div class="employee-avatar">${initials}</div>
+                            <div>
+                                <div style="font-weight: 700;">${emp.name}</div>
+                                ${emp.role ? <small style="color: var(--text-muted); font-weight: 400;">${emp.role}</small> : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    days.forEach((day, dayIndex) => {
+                        const dayShifts = shifts.filter(s => s.employeeId === emp.id && s.day === dayIndex);
+                        html += `<div class="shift-cell" 
+                            data-day="${dayIndex}" 
+                            data-employee="${emp.id}"
+                            ondragover="handleDragOver(event)" 
+                            ondragleave="handleDragLeave(event)" 
+                            ondrop="handleDrop(event)">`;
+                        
+                        if (dayShifts.length === 0) {
+                            html += '<div class="empty-cell">—</div>';
+                        } else {
+                            dayShifts.forEach(shift => {
+                                const hours = calculateHours(shift.start, shift.end);
+                                html += `
+                                    <div class="shift-block ${shift.type}" 
+                                        draggable="true"
+                                        ondragstart="handleDragStart(event, ${shift.id})"
+                                        ondragend="handleDragEnd(event)">
+                                        ${shift.start} - ${shift.end}
+                                        <div class="shift-time">${hours.toFixed(1)} hrs</div>
+                                        <button class="shift-delete" onclick="event.stopPropagation(); removeShift(${shift.id})">×</button>
+                                    </div>
+                                `;
+                            });
+                        }
+                        html += '</div>';
+                    });
+                });
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function clearAllShifts() {
+            if (confirm('Clear all shifts? Employees will be kept.')) {
+                shifts = [];
+                saveData();
+                renderAll();
+                showToast('All shifts cleared');
+            }
+        }
+
+        // Templates
+        function renderTemplates() {
+            const container = document.getElementById('templateList');
+            if (templates.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No templates saved yet. Save your current schedule as a template for quick reuse.</p>';
+                return;
+            }
+
+            container.innerHTML = templates.map((t, index) => `
+                <div class="template-item" onclick="loadTemplate(${index})">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="template-name">${t.name}</div>
+                            <div class="template-desc">${t.employees.length} employees • ${t.shifts.length} shifts • ${new Date(t.created).toLocaleDateString()}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.8rem;" onclick="event.stopPropagation(); loadTemplate(${index})">Load</button>
+                            <button class="btn btn-danger" style="padding: 8px 16px; font-size: 0.8rem;" onclick="event.stopPropagation(); deleteTemplate(${index})">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveTemplate(e) {
+            e.preventDefault();
+            templates.push({
+                name: document.getElementById('templateName').value,
+                employees: JSON.parse(JSON.stringify(employees)),
+                shifts: JSON.parse(JSON.stringify(shifts)),
+                created: new Date().toISOString()
+            });
+            saveData();
+            renderTemplates();
+            closeModal('templateModal');
+            e.target.reset();
+            showToast('Template saved!');
+            return false;
+        }
+
+        function loadTemplate(index) {
+            const t = templates[index];
+            if (confirm(Load template "${t.name}"? This will replace current schedule.)) {
+                employees = JSON.parse(JSON.stringify(t.employees));
+                shifts = JSON.parse(JSON.stringify(t.shifts));
+                saveData();
+                renderAll();
+                showToast(Template "${t.name}" loaded!);
+            }
+        }
+
+        function deleteTemplate(index) {
+            if (confirm('Delete this template?')) {
+                templates.splice(index, 1);
+                saveData();
+                renderTemplates();
+                showToast('Template deleted');
+            }
+        }
+
+        function exportData() {
+            const data = {
+                exportDate: new Date().toISOString(),
+                employees,
+                shifts: shifts.map(s => ({
+                    ...s,
+                    employeeName: employees.find(e => e.id === s.employeeId)?.name,
+                    dayName: days[s.day]
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = roster-${new Date().toISOString().split('T')[0]}.json;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exported successfully!');
+        }
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('active');
+            });
         });
-    }
-
-    
-    var hotTranslateData = {
-        };</script></html>
+    </script>
+</body>
+</html>
